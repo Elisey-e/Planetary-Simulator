@@ -34,16 +34,16 @@ namespace Simulator {
                     time_multiplier = Time_types_values[0];
                     break;
                 case Time_types::MINUTES:
-                    time_multiplier = Time_types_values[0];
+                    time_multiplier = Time_types_values[1];
                     break;
                 case Time_types::HOURS:
-                    time_multiplier = Time_types_values[0];
+                    time_multiplier = Time_types_values[2];
                     break;
                 case Time_types::DAYS:
-                    time_multiplier = Time_types_values[0];
+                    time_multiplier = Time_types_values[3];
                     break;
                 case Time_types::YEARS:
-                    time_multiplier = Time_types_values[0];
+                    time_multiplier = Time_types_values[4];
                     break;
 
                 default:
