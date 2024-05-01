@@ -19,7 +19,7 @@ namespace Simulator {
             time_t time_split = 1;
             bool time_limit_exedeed = 0;
 
-            Driver(std::string db_path) : database(db_path, planets), evaluator(planets), renderer(planets) {
+            Driver(std::string db_path, Time_types time_type) : database(db_path, planets), evaluator(planets, time_type), renderer(planets) {
                 database.load_data();
                 renderer.show();
             }

@@ -9,6 +9,7 @@
 #include "planet.hpp"
 #include <memory>
 #include <cmath>
+#include "time_type.hpp"
 
 using std::cin, std::cout, std::endl;
 
@@ -18,12 +19,37 @@ namespace Simulator {
     template <typename Val_Type>
     class Evaluator final{
 
+        Time_types time_type;
+        int time_multiplier;
+
         const double G = 6.6743 * 10e-11;
 
         std::vector<std::unique_ptr<Planet<Val_Type>>> & planets;
 
         public:
-            Evaluator(){}
+            Evaluator(Time_types type_) : time_type(type_) {
+                switch (time_type)
+                {
+                case Time_types::SECONDS:
+                    time_multiplier = Time_types_values[0];
+                    break;
+                case Time_types::MINUTES:
+                    time_multiplier = Time_types_values[0];
+                    break;
+                case Time_types::HOURS:
+                    time_multiplier = Time_types_values[0];
+                    break;
+                case Time_types::DAYS:
+                    time_multiplier = Time_types_values[0];
+                    break;
+                case Time_types::YEARS:
+                    time_multiplier = Time_types_values[0];
+                    break;
+
+                default:
+                    throw std::runtime_error("Unknown time type!");
+                }
+            }
 
             bool eval_shift_cartesian(time_t step){
                 for (auto elem : planets){
