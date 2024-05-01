@@ -29,3 +29,5 @@ namespace Simulator {
             bool load_data();             // Считывает строку из/всю БД в std::vector curr_planet, возвращает удалось или нет(бонус: throw std::runtime_error("Error while reading database"))
     };
 }
+
+// На заметку: planet.get_data() имеет вид 5 double параметра, пусть пока все параметры в СИ: {x, y, v_x, v_y, масса M}

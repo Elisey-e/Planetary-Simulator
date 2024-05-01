@@ -14,7 +14,7 @@ namespace Simulator {
     template <typename Val_Type>
     class Planet{
         std::string name;
-        std::vector<Val_Type> properties;   // Рассчитывать на 4 double параметра
+        std::vector<Val_Type> properties;   // Рассчитывать на 5 double параметра, пусть пока все параметры в СИ: x, y, v_x, v_y, масса M
 
         public:
             explicit Planet(std::string nm, std::vector<Val_Type> pr) : name(nm),  properties(pr) {}
