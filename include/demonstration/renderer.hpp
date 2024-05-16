@@ -48,7 +48,7 @@ namespace Simulator {
             }
 
             // Sets size and position of the planet and returns it
-            sf::CircleShape setPlanet(Planet obj)
+            sf::CircleShape setPlanet(auto obj) // Planet -> auto
             {
                 sf::CircleShape circle;
 
@@ -61,7 +61,7 @@ namespace Simulator {
             }
 
             // Creates drwable object
-            void drawPlanet(Planet obj, sf::CircleShape circle, sf::RenderWindow *window)
+            void drawPlanet(auto obj, sf::CircleShape circle, sf::RenderWindow *window) // Planet -> auto
             {
                 sf::Vector2u size = (*window).getSize();
                 unsigned int width = size.x;
@@ -74,18 +74,20 @@ namespace Simulator {
             // Updates the window
             void update() // Changed from bool to void
             {
+                int n = planets.size();
+
                 window.clear();
 
                 for (int i = 0; i < n; i++)
                 {
                     drawPlanet(planets[i], setPlanet(planets[i]), &window);
                 }
-                
+
                 window.display();
             }
 
             // Закрытие графического окна
-            bool close()
+            void close()
             {
                 window.close();
             };
