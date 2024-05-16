@@ -4,6 +4,8 @@
 // Refers to github.com/IvanLikhodievskiy
 //------------------------
 
+#include <SFML/Graphics.hpp>
+#include <cmath>
 #include <iostream>
 #include <vector>
 #include <planet.hpp>
@@ -17,7 +19,8 @@ using tick_t = int;
 
 namespace Simulator {
     template <typename Val_Type>
-    class Renderer final{
+    class Renderer final
+    {
         // Graphics::Screen object;
         sf::RenderWindow window;
 
@@ -26,22 +29,26 @@ namespace Simulator {
         std::vector<std::unique_ptr<Planet<Val_Type>>> & planets;
 
         public:
-            Renderer(std::vector<std::unique_ptr<Planet<Val_Type>>> & pl) : planets(pl), window(sf::VideoMode(1000, 500), "Planet Sinulator") {// Конструктор, принимает название базы данных, открывает входной поток от БД
-
-                // Создает объект типа Screen (из библиотеки с графикой)
-
+            // Constructor, gets name of a data base, opens the input stream of the data base
+            Renderer(std::vector<std::unique_ptr<Planet<Val_Type>>> & pl) : planets(pl), window(sf::VideoMode(1000, 500), "Planet Sinulator")
+            {
+                std::srand(std::time(nullptr));
             }
 
-            tick_t get_fps(){
+            // Returns the frame rate
+            tick_t get_fps()
+            {
                 return fps;
             }
             
+            // Returns the pointer to the graphics window
             sf::RenderWindow *getWindow()
             {
                 return &window;
             }
 
-            sf::CircleShape setPlanet(planet obj)
+            // Sets size and position of the planet and returns it
+            sf::CircleShape setPlanet(Planet obj)
             {
                 sf::CircleShape circle;
 
@@ -49,13 +56,12 @@ namespace Simulator {
                 circle.setOrigin(circle.getRadius(), circle.getRadius());
                 
                 circle.setFillColor(sf::Color(std::rand(), std::rand(), std::rand()));
-                circle.setOutlineColor(sf::Color(std::rand(), std::rand(), std::rand()));
-                circle.setOutlineThickness(5);
 
                 return circle;
             }
 
-            void drawPlanet(planet obj, sf::CircleShape circle, sf::RenderWindow *window)
+            // Creates drwable object
+            void drawPlanet(Planet obj, sf::CircleShape circle, sf::RenderWindow *window)
             {
                 sf::Vector2u size = (*window).getSize();
                 unsigned int width = size.x;
@@ -65,34 +71,23 @@ namespace Simulator {
                 (*window).draw(circle);
             }
 
-            bool show();        // Первый запуск окна с графикой
+            // Updates the window
+            void update() // Changed from bool to void
+            {
+                window.clear();
 
-            bool update()
-                std::srand(std::time(nullptr));
-
-                planet Earth;
-
-                // vector<Val_Type> data = planet.get_data();
-
-                Earth.x = 0;
-                Earth.y = 0;
-                Earth.v_x = 0;
-                Earth.v_y = 0;
-                Earth.M = 0;
-
-                sf::CircleShape image = setPlanet(Earth);
-                
+                for (int i = 0; i < n; i++)
                 {
-                    sf::Event event;
-                    
-                    window.clear();
-                    drawPlanet(Earth, image, &window);
-                    window.display();
-                };      // Обновление графики; точно не знаю, как реализуешь, но очень хочется, чтобы бросало исключение что-то типа std::user_interrupt
+                    drawPlanet(planets[i], setPlanet(planets[i]), &window);
+                }
+                
+                window.display();
+            }
 
+            // Закрытие графического окна
             bool close()
             {
                 window.close();
-            };       // Закрытие граф окна
+            };
     };
 }
