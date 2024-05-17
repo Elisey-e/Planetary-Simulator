@@ -10,6 +10,8 @@
 #include <memory>
 #include <cmath>
 #include "time_type.hpp"
+#include "/usr/lib/gcc/x86_64-linux-gnu/11/include/omp.h"
+
 
 using std::cin, std::cout, std::endl;
 
@@ -56,15 +58,21 @@ namespace Simulator {
                     elem.get_data()[0] += elem.get_data()[2] * step;
                     elem.get_data()[1] += elem.get_data()[3] * step;
                 }
+                #pragma omp parallel
+                {
 
-                for (auto elem : planets){
-                    for (auto src : planets){
-                        if (src.get_name() == elem.get_name()){         // Тут добавить хеш
-                            continue;
+                    #pragma omp for
+                    {
+                        for (auto elem : planets){
+                            for (auto src : planets){
+                                if (src.get_name() == elem.get_name()){         // Тут добавить хеш
+                                    continue;
+                                }
+                                double Rpow2 = (elem.get_data()[0] - src.get_data()[0]) * (elem.get_data()[0] - src.get_data()[0]) + (elem.get_data()[1] - src.get_data()[1]) * (elem.get_data()[1] - src.get_data()[1]);
+                                elem.get_data()[2] += G * std::pow(Rpow2, -1.5) * elem.get_data()[4] * src.get_data()[4] * (elem.get_data()[0] - src.get_data()[0]);
+                                elem.get_data()[3] += G * std::pow(Rpow2, -1.5) * elem.get_data()[4] * src.get_data()[4] * (elem.get_data()[1] - src.get_data()[1]);
+                            }
                         }
-                        double Rpow2 = (elem.get_data()[0] - src.get_data()[0]) * (elem.get_data()[0] - src.get_data()[0]) + (elem.get_data()[1] - src.get_data()[1]) * (elem.get_data()[1] - src.get_data()[1]);
-                        elem.get_data()[2] += G * std::pow(Rpow2, -1.5) * elem.get_data()[4] * src.get_data()[4] * (elem.get_data()[0] - src.get_data()[0]);
-                        elem.get_data()[3] += G * std::pow(Rpow2, -1.5) * elem.get_data()[4] * src.get_data()[4] * (elem.get_data()[1] - src.get_data()[1]);
                     }
                 }
 
@@ -75,5 +83,7 @@ namespace Simulator {
             }            // Calculate planet positions at moment, near current date, adjusted by step
 
             bool eval_shift_polaric(time_t step);
+
+            
     };
 }
