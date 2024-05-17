@@ -168,7 +168,7 @@ namespace Simulator {
                         {
                             if (planets[i].isMouseOver(window))
                             {
-                                box.setText("Name: " + planets[i].name + "\n" + "Mass: " + std::to_string(planets[i].M));
+                                box.setText("Name: " + planets[i].get_name() + "\n" + "Mass: " + std::to_string(planets[i].get_data()[4]));
                             }
                             else
                             {
