@@ -58,20 +58,21 @@ namespace Simulator {
                     elem.get_data()[0] += elem.get_data()[2] * step;
                     elem.get_data()[1] += elem.get_data()[3] * step;
                 }
+
+                int partial_Sum, total_Sum;
+
                 #pragma omp parallel
                 {
-
                     #pragma omp for
-                    {
-                        for (auto elem : planets){
-                            for (auto src : planets){
-                                if (src.get_name() == elem.get_name()){         // Тут добавить хеш
-                                    continue;
-                                }
-                                double Rpow2 = (elem.get_data()[0] - src.get_data()[0]) * (elem.get_data()[0] - src.get_data()[0]) + (elem.get_data()[1] - src.get_data()[1]) * (elem.get_data()[1] - src.get_data()[1]);
-                                elem.get_data()[2] += G * std::pow(Rpow2, -1.5) * elem.get_data()[4] * src.get_data()[4] * (elem.get_data()[0] - src.get_data()[0]);
-                                elem.get_data()[3] += G * std::pow(Rpow2, -1.5) * elem.get_data()[4] * src.get_data()[4] * (elem.get_data()[1] - src.get_data()[1]);
+                    for (int i = 0; i < planets.size(); i++){
+                        auto elem = planets[i];
+                        for (auto src : planets){
+                            if (src.get_name() == elem.get_name()){         // Тут добавить хеш
+                                continue;
                             }
+                            double Rpow2 = (elem.get_data()[0] - src.get_data()[0]) * (elem.get_data()[0] - src.get_data()[0]) + (elem.get_data()[1] - src.get_data()[1]) * (elem.get_data()[1] - src.get_data()[1]);
+                            elem.get_data()[2] += G * std::pow(Rpow2, -1.5) * elem.get_data()[4] * src.get_data()[4] * (elem.get_data()[0] - src.get_data()[0]);
+                            elem.get_data()[3] += G * std::pow(Rpow2, -1.5) * elem.get_data()[4] * src.get_data()[4] * (elem.get_data()[1] - src.get_data()[1]);
                         }
                     }
                 }

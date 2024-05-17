@@ -1,71 +1,28 @@
-#include <SFML/Graphics.hpp>
-#include <cmath>
+#include <stdio.h>
+#include "/usr/lib/gcc/x86_64-linux-gnu/11/include/omp.h"
 
-class planet
-{
-    public:
-        int x, y;
-        double v_x, v_y, M;
-};
+int main(int argc, char** argv){
+    int partial_Sum, total_Sum;
 
-sf::CircleShape setPlanet(planet obj)
-{
-    sf::CircleShape circle;
-
-    circle.setRadius(50 / (1 + exp(-obj.M)) - 20);
-    circle.setOrigin(circle.getRadius(), circle.getRadius());
-    
-    int r = std::rand(), g = std::rand(), b = std::rand();
-    circle.setFillColor(sf::Color(r, g, b));
-    circle.setOutlineColor(sf::Color(r, g, b));
-    circle.setOutlineThickness(0);
-
-    return circle;
-}
-
-void drawPlanet(planet obj, sf::CircleShape circle, sf::RenderWindow *window)
-{
-    sf::Vector2u size = (*window).getSize();
-    unsigned int width = size.x;
-    unsigned int height = size.y;
-    circle.setPosition((size.x / 2) + obj.x, (size.y / 2) - obj.y);
-
-    (*window).draw(circle);
-}
-
-int main()
-{
-    std::srand(std::time(nullptr));
-
-    sf::RenderWindow window(sf::VideoMode(1000, 500), "Test");
-    window.setFramerateLimit(60);
-
-    planet Earth;
-
-    Earth.x = 0;
-    Earth.y = 0;
-    Earth.v_x = 0;
-    Earth.v_y = 0;
-    Earth.M = 10000;
-
-    sf::CircleShape image = setPlanet(Earth);
-    
-    while (window.isOpen())
+    #pragma omp parallel private(partial_Sum) shared(total_Sum)
     {
-        sf::Event event;
+        partial_Sum = 0;
+        total_Sum = 0;
 
-        while (window.pollEvent(event))
+        #pragma omp for
         {
-            if (event.type == sf::Event::Closed)
-            {
-                window.close();
+            for(int i = 1; i <= 1000; i++){
+                partial_Sum += i;
             }
         }
-        
-        window.clear();
-        drawPlanet(Earth, image, &window);
-        window.display();
-    }
 
+        //Create thread safe region.
+        #pragma omp critical
+        {
+                //add each threads partial sum to the total sum
+                total_Sum += partial_Sum;
+        }
+    }
+    printf("Total Sum: %d\n", total_Sum);
     return 0;
 }
