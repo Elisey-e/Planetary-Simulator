@@ -52,7 +52,9 @@ namespace Simulator {
             {
                 sf::CircleShape circle;
 
-                circle.setRadius(100 / (1 + exp(-obj.M)));
+                std::vector<Val_Type> data = obj.get_data();
+
+                circle.setRadius(100 / (1 + exp(-data[4])));
                 circle.setOrigin(circle.getRadius(), circle.getRadius());
                 
                 circle.setFillColor(sf::Color(std::rand(), std::rand(), std::rand()));
@@ -66,7 +68,8 @@ namespace Simulator {
                 sf::Vector2u size = (*window).getSize();
                 unsigned int width = size.x;
                 unsigned int height = size.y;
-                circle.setPosition((size.x / 2) + obj.x, (size.y / 2) - obj.y);
+                std::vector<Val_Type> data = obj.get_data();
+                circle.setPosition((size.x / 2) + data[0], (size.y / 2) - data[1]);
 
                 (*window).draw(circle);
             }
