@@ -66,6 +66,55 @@ class Textbox {
         }
 };
 
+class Textbox {
+    sf::Text text;
+    sf::RectangleShape box;
+
+    public:
+        Textbox(std::string t, sf::Vector2f size, int charSize, sf::Color bgColor, sf::Color textColor)
+        {
+            text.setString(t);
+            text.setFillColor(textColor);
+            text.setCharacterSize(charSize);
+
+            box.setSize(size);
+            box.setFillColor(bgColor);
+        }
+
+        void setText (std::string t)
+        {
+            text.setString(t);
+        }
+
+        void setFont (sf::Font &font)
+        {
+            text.setFont(font);
+        }
+
+        void setBackColor(sf::Color color)
+        {
+            box.setFillColor(color);
+        }
+
+        void setTextColor(sf::Color color)
+        {
+            text.setFillColor(color);
+        }
+
+        void setPosition(sf::Vector2f pos)
+        {
+            box.setPosition(pos);
+
+            text.setPosition({pos.x, pos.y});
+        }
+
+        void drawTo(sf::RenderWindow &window)
+        {
+            window.draw(box);
+            window.draw(text);
+        }
+};
+
 namespace Simulator {
     template <typename Val_Type>
     class Renderer final
@@ -73,6 +122,10 @@ namespace Simulator {
         // Graphics::Screen object;
         sf::RenderWindow window;
 
+        // Textbox with info
+        Textbox box;
+
+        tick_t fps = 50;    // Frame rate
         // Textbox with info
         Textbox box;
 
@@ -89,7 +142,19 @@ namespace Simulator {
                 window.setFramerateLimit(fps);
 
                 // Seeding generator
+                // Initialization of the window
+                window.setFramerateLimit(fps);
+
+                // Seeding generator
                 std::srand(std::time(nullptr));
+                
+                // Downloading the font
+                sf::Font arial;
+                arial.loadFromFile("ARIAL.TTF");
+
+                // Initializing the textbox
+                box.setPosition({850, 0});
+                box.setFont(arial);
                 
                 // Downloading the font
                 sf::Font arial;
@@ -108,7 +173,9 @@ namespace Simulator {
             
             // Returns the pointer to the graphics window
             sf::RenderWindow &getWindow()
+            sf::RenderWindow &getWindow()
             {
+                return window;
                 return window;
             }
 
@@ -129,13 +196,16 @@ namespace Simulator {
 
             // Creates drwable object
             void drawPlanet(auto obj, sf::CircleShape circle, sf::RenderWindow &window) // Planet -> auto
+            void drawPlanet(auto obj, sf::CircleShape circle, sf::RenderWindow &window) // Planet -> auto
             {
+                sf::Vector2u size = window.getSize();
                 sf::Vector2u size = window.getSize();
                 unsigned int width = size.x;
                 unsigned int height = size.y;
                 std::vector<Val_Type> data = obj.get_data();
                 circle.setPosition((size.x / 2) + data[0], (size.y / 2) - data[1]);
 
+                window.draw(circle);
                 window.draw(circle);
             }
 
@@ -145,8 +215,10 @@ namespace Simulator {
                 int n = planets.size();
 
                 // Clearing the window
+                // Clearing the window
                 window.clear();
 
+                // Drawing the planets
                 // Drawing the planets
                 for (int i = 0; i < n; i++)
                 {
@@ -185,6 +257,7 @@ namespace Simulator {
                 window.display();
             }
 
+            // Closing the graphics window
             // Closing the graphics window
             void close()
             {
