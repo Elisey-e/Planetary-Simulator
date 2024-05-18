@@ -8,13 +8,25 @@ int main(){
 
     std::cout << "ok\n";
 
-    std::vector<double> prop{1, 2, 3, 4, 5};
-
+    std::vector<double> prop{0, 0, 0, 0, 5};
     std::string str{"Sun"};
+    Planet<double> sun(str, prop);
 
-    Planet<double> planet(str, prop);
+    std::vector<double> prop2{1, 0, 0, 0, 5};
+    std::string str2{"earth"};
+    Planet<double> earth(str2, prop2);
 
-    std::cout << planet.get_name() << "\n";
+    Driver<double> DR{"path", Time_types::SECONDS};
+
+    DR.planets.push_back(sun);
+    DR.planets.push_back(earth);
+
+    DR.start();
+
+
+
+
+    std::cout << sun.get_name() << "\n";
 
     return 0;
 }

@@ -26,10 +26,10 @@ namespace Simulator {
 
         const double G = 6.6743 * 10e-11;
 
-        std::vector<std::unique_ptr<Planet<Val_Type>>> & planets;
+        std::vector<Planet<Val_Type>> planets;
 
         public:
-            Evaluator(Time_types type_) : time_type(type_) {
+            Evaluator(std::vector<Planet<Val_Type>> & pl, Time_types type_) : time_type(type_), planets(pl) {
                 switch (time_type)
                 {
                 case Time_types::SECONDS:
@@ -55,8 +55,9 @@ namespace Simulator {
 
             bool eval_shift_cartesian(time_t step){
                 for (auto elem : planets){
-                    elem.get_data()[0] += elem.get_data()[2] * step;
-                    elem.get_data()[1] += elem.get_data()[3] * step;
+                    
+                    elem.get_data()[0] += elem.get_data()[2] * step * time_multiplier;
+                    elem.get_data()[1] += elem.get_data()[3] * step * time_multiplier;
                 }
 
                 int partial_Sum, total_Sum;
@@ -71,8 +72,8 @@ namespace Simulator {
                                 continue;
                             }
                             double Rpow2 = (elem.get_data()[0] - src.get_data()[0]) * (elem.get_data()[0] - src.get_data()[0]) + (elem.get_data()[1] - src.get_data()[1]) * (elem.get_data()[1] - src.get_data()[1]);
-                            elem.get_data()[2] += G * std::pow(Rpow2, -1.5) * elem.get_data()[4] * src.get_data()[4] * (elem.get_data()[0] - src.get_data()[0]);
-                            elem.get_data()[3] += G * std::pow(Rpow2, -1.5) * elem.get_data()[4] * src.get_data()[4] * (elem.get_data()[1] - src.get_data()[1]);
+                            elem.get_data()[2] += G * std::pow(Rpow2, -1.5) * elem.get_data()[4] * src.get_data()[4] * (elem.get_data()[0] - src.get_data()[0]) * step * time_multiplier ;
+                            elem.get_data()[3] += G * std::pow(Rpow2, -1.5) * elem.get_data()[4] * src.get_data()[4] * (elem.get_data()[1] - src.get_data()[1]) * step * time_multiplier;
                         }
                     }
                 }
